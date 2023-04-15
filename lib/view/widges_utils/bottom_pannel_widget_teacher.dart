@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_game/controllers/bloc/auth_student/auth_bloc.dart';
+import 'package:quiz_game/controllers/question_controller.dart';
 import 'package:quiz_game/controllers/user_controller.dart';
 import 'package:quiz_game/config/color_config.dart';
 import 'package:quiz_game/view/page_utils/dash_board_page.dart';
+
+import '../page_utils/teacher/add_question_page.dart';
 
 class BottomPannelWidgetTeacher extends StatefulWidget {
   const BottomPannelWidgetTeacher(
@@ -30,7 +33,8 @@ class _BottomPannelWidgetTeacherState extends State<BottomPannelWidgetTeacher> {
   Widget build(BuildContext context) {
     String uid = widget.userID;
     Size size = MediaQuery.of(context).size;
-    PageController _myPage = PageController(initialPage: 2);
+    PageController _myPage = PageController(initialPage: 1);
+    QuestionController questionController = QuestionController();
     var page_one_icon = IconButton(
       iconSize: size.width * 0.1,
       icon: Image.asset("assets/images/pinder-profile.png", color: iconColorList[0],),
@@ -136,7 +140,7 @@ class _BottomPannelWidgetTeacherState extends State<BottomPannelWidgetTeacher> {
         },
         children: <Widget>[
 
-          DashBoardPage(),
+          AddQuestionPage(uid,questionController),
 
         ],
       ),

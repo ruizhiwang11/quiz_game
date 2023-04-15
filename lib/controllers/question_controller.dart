@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quiz_game/models/Question.dart';
+import 'package:quiz_game/models/Quiz.dart';
 import 'package:uuid/uuid.dart';
+
+import '../models/Question.dart';
 
 
 class QuestionController {
@@ -14,8 +16,8 @@ class QuestionController {
 
       await FirebaseFirestore.instance
           .collection('questions')
-          .where('uid', isEqualTo: question.questionUID)
           .where('title', isEqualTo: question.questionTitle)
+          .where('first', isEqualTo: question.firstSelection)
           .get()
           .then((users) {
         if (users.size != 0) {
@@ -45,5 +47,25 @@ class QuestionController {
 
 
       }
+    }
+
+    Future<List> getAllQuestionsFromDB() async {
+
+      List<Question> allQuestionList = [];
+      var res = await FirebaseFirestore.instance
+          .collection('questions').get();
+      for(int i = 0; i < res.docs.length; i++){
+        String uid = res.docs[i].data()['uid'].toString();
+        String title = res.docs[i].data()['title'].toString();
+        String first = res.docs[i].data()['first'].toString();
+        String second = res.docs[i].data()['second'].toString();
+        String third = res.docs[i].data()['third'].toString();
+        String fourth = res.docs[i].data()['fourth'].toString();
+        String answer = res.docs[i].data()['answer'].toString();
+
+        Question tmpQ = Question(uid, title, first, second, third, fourth, answer, DateTime.now().microsecondsSinceEpoch);
+        allQuestionList.add(tmpQ);
+      }
+      return allQuestionList;
     }
 }

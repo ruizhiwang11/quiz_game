@@ -8,7 +8,7 @@ class Question extends Equatable {
   String thirdSelection;
   String fourthSelection;
   String correctAnswer;
-  DateTime updatedTime;
+  int updatedTime;
 
   Question(
       this.questionUID,
@@ -30,4 +30,5 @@ class Question extends Equatable {
         correctAnswer,
         updatedTime
       ];
+
 }
