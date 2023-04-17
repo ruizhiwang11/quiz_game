@@ -12,13 +12,8 @@ class Quiz {
   List<String> _questionList = [];
 
 
-  Quiz(String quizUID, String teacherUID, int createdTime, int numQuestions)
-      : _quizUID = quizUID,
-        _teacherUID = teacherUID,
-        _createdTime = createdTime,
-        _numQuistions = numQuestions{
-
-  }
+  Quiz(this._quizUID, this._studentList, this._createdTime, this._numQuistions,
+      this._teacherUID, this._questionList);
 
   void addQuestion(Question question) {
     _questionList.add(question.questionUID);

@@ -51,14 +51,14 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
           context: context,
           builder: (BuildContext context) {
             return DialogMsgBox(
-                "", "Create Quiz <${_title}> successfully");
+                "", "Create Question <${_title}> successfully");
           });
     } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return DialogMsgBox(
-                "", "Quiz <${_title}> already exists");
+                "", "Question <${_title}> already exists");
           });
     }
   }

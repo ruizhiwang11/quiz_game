@@ -5,54 +5,34 @@ import 'package:quiz_game/controllers/question_controller.dart';
 import 'package:quiz_game/controllers/user_controller.dart';
 import 'package:quiz_game/config/color_config.dart';
 import 'package:quiz_game/view/page_utils/dash_board_page.dart';
+import 'package:quiz_game/view/page_utils/teacher/create_quiz_room_page.dart';
 
 import '../page_utils/teacher/add_question_page.dart';
 
 class BottomPannelWidgetTeacher extends StatefulWidget {
-  const BottomPannelWidgetTeacher(
-      String uid, UserController userController)
+  const BottomPannelWidgetTeacher(String uid, UserController userController)
       : userID = uid,
         _userController = userController;
   final userID;
   final UserController _userController;
 
   @override
-  _BottomPannelWidgetTeacherState createState() => _BottomPannelWidgetTeacherState();
+  _BottomPannelWidgetTeacherState createState() =>
+      _BottomPannelWidgetTeacherState();
 }
 
 class _BottomPannelWidgetTeacherState extends State<BottomPannelWidgetTeacher> {
   List<Color> iconColorList = [
     ThemeColor.grey,
-    ThemeColor.grey,
     ThemeColor.tiffany_blue,
-    ThemeColor.grey,
-    ThemeColor.grey
   ];
 
   @override
   Widget build(BuildContext context) {
     String uid = widget.userID;
     Size size = MediaQuery.of(context).size;
-    PageController _myPage = PageController(initialPage: 1);
+    PageController _myPage = PageController(initialPage: 2);
     QuestionController questionController = QuestionController();
-    var page_one_icon = IconButton(
-      iconSize: size.width * 0.1,
-      icon: Image.asset("assets/images/pinder-profile.png", color: iconColorList[0],),
-      color: iconColorList[0],
-      onPressed: () {
-        setState(() {
-          _myPage.jumpToPage(0);
-          iconColorList = [
-            ThemeColor.grey,
-            ThemeColor.grey,
-            ThemeColor.grey,
-            ThemeColor.grey,
-            ThemeColor.grey
-          ];
-          iconColorList[0] = ThemeColor.tiffany_blue;
-        });
-      },
-    );
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -79,10 +59,30 @@ class _BottomPannelWidgetTeacherState extends State<BottomPannelWidgetTeacher> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              page_one_icon,
               IconButton(
                 iconSize: size.width * 0.1,
-                icon: Image.asset("assets/images/pinder-add.png", color: iconColorList[1],),
+                icon: Image.asset(
+                  "assets/images/pinder-profile.png",
+                  color: iconColorList[0],
+                ),
+                color: iconColorList[0],
+                onPressed: () {
+                  setState(() {
+                    _myPage.jumpToPage(0);
+                    iconColorList = [
+                      ThemeColor.grey,
+                      ThemeColor.grey,
+                    ];
+                    iconColorList[0] = ThemeColor.tiffany_blue;
+                  });
+                },
+              ),
+              IconButton(
+                iconSize: size.width * 0.1,
+                icon: Image.asset(
+                  "assets/images/pinder-add.png",
+                  color: iconColorList[1],
+                ),
                 color: iconColorList[1],
                 onPressed: () {
                   setState(() {
@@ -90,36 +90,6 @@ class _BottomPannelWidgetTeacherState extends State<BottomPannelWidgetTeacher> {
                   });
                 },
               ),
-              IconButton(
-                iconSize: size.width * 0.1,
-                icon: Image.asset("assets/images/pinder-home.png", color: iconColorList[2],),
-                color: iconColorList[2],
-                onPressed: () {
-                  setState(() {
-                    _myPage.jumpToPage(2);
-                  });
-                },
-              ),
-              IconButton(
-                iconSize: size.width * 0.1,
-                icon: Image.asset("assets/images/pinder-match.png", color: iconColorList[3],),
-                color: iconColorList[3],
-                onPressed: () {
-                  setState(() {
-                    _myPage.jumpToPage(3);
-                  });
-                },
-              ),
-              IconButton(
-                iconSize: size.width * 0.1,
-                icon: Image.asset("assets/images/pinder-chat.png", color: iconColorList[4],),
-                color: iconColorList[4],
-                onPressed: () {
-                  setState(() {
-                    _myPage.jumpToPage(4);
-                  });
-                },
-              )
             ],
           ),
         ),
@@ -132,16 +102,12 @@ class _BottomPannelWidgetTeacherState extends State<BottomPannelWidgetTeacher> {
           iconColorList = [
             ThemeColor.tan,
             ThemeColor.tan,
-            ThemeColor.tan,
-            ThemeColor.tan,
-            ThemeColor.tan,
           ];
           iconColorList[number] = ThemeColor.tiffany_blue;
         },
         children: <Widget>[
-
-          AddQuestionPage(uid,questionController),
-
+          AddQuestionPage(uid, questionController),
+          CreateQuizRoomPage(uid),
         ],
       ),
     );
