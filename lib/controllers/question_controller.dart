@@ -6,66 +6,98 @@ import '../models/Question.dart';
 
 
 class QuestionController {
-    QuestionController();
-    bool add_flag = false;
+  QuestionController();
 
-    void set_flag(bool flag) {
-      add_flag = flag;
-    }
-    Future<bool> addQuestion(Question question) async{
+  bool add_flag = false;
 
-      await FirebaseFirestore.instance
-          .collection('questions')
-          .where('title', isEqualTo: question.questionTitle)
-          .where('first', isEqualTo: question.firstSelection)
-          .get()
-          .then((users) {
-        if (users.size != 0) {
-          print("question already exists");
-          set_flag(false);
-        } else {
-          set_flag(true);
-        }
-      });
+  void set_flag(bool flag) {
+    add_flag = flag;
+  }
 
-      if (!add_flag){
-        return false;
-      }else{
-        CollectionReference questions =
-        FirebaseFirestore.instance.collection('questions');
-        questions.add({
-          'uid' : question.questionUID,
-          'title': question.questionTitle,
-          'first': question.firstSelection,
-          'second': question.secondSelection,
-          'third': question.thirdSelection,
-          'fourth': question.fourthSelection,
-          'answer': question.correctAnswer,
-        });
+  Future<bool> addQuestion(Question question) async {
+    await FirebaseFirestore.instance
+        .collection('questions')
+        .where('title', isEqualTo: question.questionTitle)
+        .where('first', isEqualTo: question.firstSelection)
+        .get()
+        .then((users) {
+      if (users.size != 0) {
+        print("question already exists");
         set_flag(false);
-        return true;
-
-
+      } else {
+        set_flag(true);
       }
+    });
+
+    if (!add_flag) {
+      return false;
+    } else {
+      CollectionReference questions =
+      FirebaseFirestore.instance.collection('questions');
+      questions.add({
+        'uid': question.questionUID,
+        'title': question.questionTitle,
+        'first': question.firstSelection,
+        'second': question.secondSelection,
+        'third': question.thirdSelection,
+        'fourth': question.fourthSelection,
+        'answer': question.correctAnswer,
+      });
+      set_flag(false);
+      return true;
     }
+  }
 
-    Future<List> getAllQuestionsFromDB() async {
+  Future<List> getAllQuestionsFromDB() async {
+    List<Question> allQuestionList = [];
+    var res = await FirebaseFirestore.instance
+        .collection('questions').get();
+    for (int i = 0; i < res.docs.length; i++) {
+      String uid = res.docs[i].data()['uid'].toString();
+      String title = res.docs[i].data()['title'].toString();
+      String first = res.docs[i].data()['first'].toString();
+      String second = res.docs[i].data()['second'].toString();
+      String third = res.docs[i].data()['third'].toString();
+      String fourth = res.docs[i].data()['fourth'].toString();
+      String answer = res.docs[i].data()['answer'].toString();
 
-      List<Question> allQuestionList = [];
-      var res = await FirebaseFirestore.instance
-          .collection('questions').get();
-      for(int i = 0; i < res.docs.length; i++){
-        String uid = res.docs[i].data()['uid'].toString();
-        String title = res.docs[i].data()['title'].toString();
-        String first = res.docs[i].data()['first'].toString();
-        String second = res.docs[i].data()['second'].toString();
-        String third = res.docs[i].data()['third'].toString();
-        String fourth = res.docs[i].data()['fourth'].toString();
-        String answer = res.docs[i].data()['answer'].toString();
-
-        Question tmpQ = Question(uid, title, first, second, third, fourth, answer, DateTime.now().microsecondsSinceEpoch);
-        allQuestionList.add(tmpQ);
-      }
-      return allQuestionList;
+      Question tmpQ = Question(
+          uid,
+          title,
+          first,
+          second,
+          third,
+          fourth,
+          answer,
+          DateTime
+              .now()
+              .microsecondsSinceEpoch);
+      allQuestionList.add(tmpQ);
     }
+    return allQuestionList;
+  }
+
+  Future<Question> getQuestionByID(String questionID) async {
+    var res = await FirebaseFirestore.instance
+        .collection('questions').where('uid', isEqualTo: questionID).get();
+    String uid = res.docs[0].data()['uid'].toString();
+    String title = res.docs[0].data()['title'].toString();
+    String first = res.docs[0].data()['first'].toString();
+    String second = res.docs[0].data()['second'].toString();
+    String third = res.docs[0].data()['third'].toString();
+    String fourth = res.docs[0].data()['fourth'].toString();
+    String answer = res.docs[0].data()['answer'].toString();
+    Question question = Question(
+        uid,
+        title,
+        first,
+        second,
+        third,
+        fourth,
+        answer,
+        DateTime
+            .now()
+            .microsecondsSinceEpoch);
+    return question;
+  }
 }

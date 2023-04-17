@@ -1,35 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_game/controllers/question_controller.dart';
 import 'package:quiz_game/controllers/quiz_room_controller.dart';
-import 'package:quiz_game/view/page_utils/teacher/select_question_page.dart';
+import 'package:quiz_game/view/page_utils/student/quiz_page.dart';
 
 import '../../../config/color_config.dart';
 import '../../widges_utils/dialog_msg_box_widget.dart';
-import '../../widges_utils/dropdown_form_field_widget.dart';
 
-class CreateQuizRoomPage extends StatefulWidget {
-  CreateQuizRoomPage(String uid) : _uid = uid;
+class JoinQuizRoomPage extends StatefulWidget {
+  JoinQuizRoomPage(String uid) : _uid = uid;
   final String _uid;
 
   @override
-  State<CreateQuizRoomPage> createState() => _CreateQuizRoomPageState();
+  State<JoinQuizRoomPage> createState() => _JoinQuizRoomPageState();
 }
 
-class _CreateQuizRoomPageState extends State<CreateQuizRoomPage> {
+class _JoinQuizRoomPageState extends State<JoinQuizRoomPage> {
   String get _uid => widget._uid;
-  late String _numOfQuiz = "";
+  late String _quizID = "";
   final ScrollController scrollController = ScrollController();
-
+  final TextEditingController _quizTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List data = [
-      {"display": "1", "value": "1"},
-      {"display": "2", "value": "2"},
-      {"display": "3", "value": "3"},
-      {"display": "4", "value": "4"},
-      {"display": "5", "value": "5"},
-    ];
     return Scrollbar(
         thumbVisibility: true,
         controller: scrollController,
@@ -47,7 +38,7 @@ class _CreateQuizRoomPageState extends State<CreateQuizRoomPage> {
                     children: <Widget>[
                       Center(
                         child: Text(
-                          "Create Quiz Room",
+                          "Join Quiz Room",
                           style: TextStyle(
                               fontSize: size.width * 0.1,
                               color: ThemeColor.black),
@@ -89,27 +80,28 @@ class _CreateQuizRoomPageState extends State<CreateQuizRoomPage> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(size.height * 0.02),
-                        child: DropDownFormField(
-                          titleText: 'How many questions in this quiz room',
-                          hintText: 'Please choose one',
-                          value: _numOfQuiz,
-                          onSaved: (value) {
-                            setState(() {
-                              _numOfQuiz = value;
-                            });
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _numOfQuiz = value;
-                            });
-                          },
-                          dataSource: data,
-                          textField: 'display',
-                          valueField: 'value',
+                        child: TextFormField(
+                          controller: _quizTextController,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (_) {
-                            if (_numOfQuiz == "") return "Type can't be empty";
+                            if (_quizTextController.text == "")
+                              return "The quiz field is required";
                             return "";
                           },
+                          decoration: InputDecoration(
+                            labelText: "Quiz ID",
+                            labelStyle: TextStyle(
+                                color: ThemeColor.black,
+                                fontSize: size.height * 0.02),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor.black, width: 1.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: ThemeColor.black, width: 1.0),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
@@ -157,20 +149,33 @@ class _CreateQuizRoomPageState extends State<CreateQuizRoomPage> {
                       Padding(
                         padding: EdgeInsets.all(size.height * 0.02),
                         child: InkWell(
-                          onTap: () {
-                            if (_numOfQuiz == "") {
+                          onTap: () async {
+                            if (_quizTextController.text == "") {
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return DialogMsgBox(
-                                        "", "The number of quiz is required");
+                                        "", "The quiz ID is required");
                                   });
                             } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SelectQuestionPage(
-                                          _uid, int.parse(_numOfQuiz))));
+                              QuizRoomController controller = QuizRoomController();
+                              var result = await controller.checkQuizExist(_quizTextController.text);
+                              if(result){
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => QuizPage(
+                                            _uid, _quizTextController.text)));
+                              }
+                              else{
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return DialogMsgBox(
+                                          "", "The quiz ID not exist in DB");
+                                    });
+                              }
+
                             }
                           },
                           child: IgnorePointer(
@@ -180,11 +185,11 @@ class _CreateQuizRoomPageState extends State<CreateQuizRoomPage> {
                               decoration: BoxDecoration(
                                 color: ThemeColor.tiffany_blue,
                                 borderRadius:
-                                    BorderRadius.circular(size.height * 0.05),
+                                BorderRadius.circular(size.height * 0.05),
                               ),
                               child: Center(
                                 child: Text(
-                                  "To Select question",
+                                  "Join Quiz",
                                   style: TextStyle(
                                       fontSize: size.height * 0.025,
                                       color: ThemeColor.black),

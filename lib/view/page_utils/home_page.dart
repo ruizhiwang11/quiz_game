@@ -7,6 +7,7 @@ import 'package:quiz_game/config/color_config.dart';
 import 'package:quiz_game/view/widges_utils/home_widget.dart';
 import 'package:quiz_game/view/widges_utils/bottom_pannel_widget.dart';
 
+import '../../utils/theme_converter.dart';
 import '../widges_utils/bottom_pannel_widget_teacher.dart';
 
 class HomePage extends StatefulWidget {
@@ -67,11 +68,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Color myColor = Color(0xFFA0E7E5);
+    MaterialColor myMaterialColor = createMaterialColor(myColor);
+
     return BlocProvider(
       create: (context) => _authBloc,
       child: MaterialApp(
           themeMode: ThemeMode.dark,
-          color: HexColor('#FFAEBC'),
+          theme: ThemeData(primarySwatch: myMaterialColor),
           debugShowCheckedModeBanner: false,
           home: BlocBuilder(
             bloc: _authBloc,

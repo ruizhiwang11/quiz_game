@@ -48,7 +48,6 @@ class _SelectQuestionPageState extends State<SelectQuestionPage> {
   }
 
   Future<void> _submitted() async {
-
     // quizs.add({
     //   'quizID' : quiz.quizUID,
     //   'teacherID': quiz.teacherUID,
@@ -63,25 +62,26 @@ class _SelectQuestionPageState extends State<SelectQuestionPage> {
     var numQuestions = _numOfQuestions;
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> studentIDList = [];
-    List<String> questionIDList = questionMap.values.map((value) => value.questionUID.toString()).toList();
+    List<String> questionIDList = questionMap.values
+        .map((value) => value.questionUID.toString())
+        .toList();
     // Quiz(this._quizUID, this._studentList, this._createdTime, this._numQuistions,
     //     this._teacherUID, this._questionList);
-    Quiz quiz = Quiz(shortUuid, studentIDList,timestamp,numQuestions,teacherID, questionIDList);
+    Quiz quiz = Quiz(shortUuid, studentIDList, timestamp, numQuestions,
+        teacherID, questionIDList);
     bool uploadResult = await _quizRoomController.addQuiz(quiz);
 
     if (uploadResult) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return DialogMsgBox(
-                "", "Create Quiz <${shortUuid}> successfully");
+            return DialogMsgBox("", "Create Quiz <${shortUuid}> successfully");
           });
     } else {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return DialogMsgBox(
-                "", "Quiz <${shortUuid}> already exists");
+            return DialogMsgBox("", "Quiz <${shortUuid}> already exists");
           });
     }
   }
@@ -150,7 +150,7 @@ class _SelectQuestionPageState extends State<SelectQuestionPage> {
         ),
       ));
     }
-    containerList.add(                      Padding(
+    containerList.add(Padding(
       padding: EdgeInsets.all(size.height * 0.02),
       child: InkWell(
         onTap: () {
@@ -158,10 +158,8 @@ class _SelectQuestionPageState extends State<SelectQuestionPage> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DialogMsgBox(
-                      "", "One or more questions not selected");
+                  return DialogMsgBox("", "One or more questions not selected");
                 });
-
           } else {
             _submitted();
           }
@@ -172,15 +170,13 @@ class _SelectQuestionPageState extends State<SelectQuestionPage> {
             height: size.height * 0.06,
             decoration: BoxDecoration(
               color: ThemeColor.tiffany_blue,
-              borderRadius:
-              BorderRadius.circular(size.height * 0.05),
+              borderRadius: BorderRadius.circular(size.height * 0.05),
             ),
             child: Center(
               child: Text(
                 "Create Quiz Room",
                 style: TextStyle(
-                    fontSize: size.height * 0.025,
-                    color: ThemeColor.black),
+                    fontSize: size.height * 0.025, color: ThemeColor.black),
               ),
             ),
           ),

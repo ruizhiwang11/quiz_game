@@ -27,7 +27,7 @@ def main_test():
     firebase_admin.initialize_app(cred)
     db = firestore.client()
 
-    # create fake data, each fake data batch is 1000 data
+    # create fake data, each fake data batch is 30 data
     fake = Faker()
     data = [{
     "name": fake.name(),
